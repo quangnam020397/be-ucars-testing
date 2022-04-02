@@ -32,8 +32,8 @@ async def add_branch_data(branch: BranchSchema = Body(...)):
 
 
 @branchRouter.get("/", response_description="branchs retrieved")
-async def get_branchs():
-    branchs = await retrieve_branchs()
+async def get_branchs(searchValue: str = None):
+    branchs = await retrieve_branchs(searchValue)
     if branchs:
         return ResponseModel(branchs, "branchs data retrieved successfully")
     return ResponseModel(branchs, "Empty list returned")

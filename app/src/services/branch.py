@@ -15,9 +15,14 @@ def branch_helper(branch):
     }
 
 # Retrieve all branchs present in the database
-async def retrieve_branchs():
+async def retrieve_branchs(searchValue: str,):
     branchs = []
-    async for branch in branch_collection.find({"deleted_at": None}):
+    query = {"deleted_at": None}
+    if searchValue is not None:
+        await branch_collection.create_index([("name", "text")])
+        query["$text"] = {"$search": searchValue}
+        
+    async for branch in branch_collection.find(query):
         branchs.append(branch_helper(branch))
     print(branchs)
     return branchs
