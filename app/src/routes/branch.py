@@ -77,13 +77,18 @@ async def delete_branch_data(id: str):
     )
 
 
-@branchRouter.post("/logo/{id}", response_description="logo uploaded")
-async def upload_file_to_minio(file: UploadFile = File(...)):
+@branchRouter.post("/{id}/logo", response_description="logo uploaded")
+async def upload_file_to_minio(id: str, file: UploadFile = File(...)):
     try:
+        branch = await retrieve_branch(id)
+        if not branch:
+            return ErrorResponseModel("An error occurred.", 404, "branch doesn't exist.")
 
         data_file = await uploadFile(file)
         if(data_file != None):
-            return ResponseModel(data_file, "file uploaded successfully")
+            await update_branch(id, {"logo": data_file.get("url")})
+            data = await retrieve_branch(id)
+            return ResponseModel(data, "file uploaded successfully")
         return ErrorResponseModel("An error occurred", 404, "file not found")
     except Exception as e:
         return ErrorResponseModel("An error occurred", 404, str(e))

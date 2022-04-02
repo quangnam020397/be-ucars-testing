@@ -12,4 +12,3 @@ router.include_router(branchRouter, tags=["Branchs"], prefix='/branch')
 
 router.include_router(carRouter, tags=["Cars"], prefix='/car')
 
-
