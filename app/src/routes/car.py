@@ -46,7 +46,7 @@ async def get_cars(branch_id: str = None, searchValue: str = None):
     return ResponseModel(cars, "Empty list returned")
 
 
-@carRouter.get("/{id}", response_description="car data retrieved")
+@carRouter.get("/{id}/", response_description="car data retrieved")
 async def get_car_data(id):
     car = await retrieve_car(id)
     if car:
@@ -69,7 +69,7 @@ async def update_car_data(id: str, req: UpdateCarSchema = Body(...)):
         "There was an error updating the car data.",
     )
     
-@carRouter.delete("/{id}", response_description="car data deleted from the database")
+@carRouter.delete("/{id}/", response_description="car data deleted from the database")
 async def delete_car_data(id: str):
     deleted_car = await delete_car(id)
     if deleted_car:

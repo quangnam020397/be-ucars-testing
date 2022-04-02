@@ -39,7 +39,7 @@ async def get_branchs(searchValue: str = None):
     return ResponseModel(branchs, "Empty list returned")
 
 
-@branchRouter.get("/{id}", response_description="branch data retrieved")
+@branchRouter.get("/{id}/", response_description="branch data retrieved")
 async def get_branch_data(id):
     branch = await retrieve_branch(id)
     if branch:
@@ -47,7 +47,7 @@ async def get_branch_data(id):
     return ErrorResponseModel("An error occurred.", 404, "branch doesn't exist.")
 
 
-@branchRouter.put("/{id}")
+@branchRouter.put("/{id}/")
 async def update_branch_data(id: str, req: UpdateBranchSchema = Body(...)):
     req.updated_at = datetime.now()
     req = {k: v for k, v in req.dict().items() if v is not None}
@@ -64,7 +64,7 @@ async def update_branch_data(id: str, req: UpdateBranchSchema = Body(...)):
     )
 
 
-@branchRouter.delete("/{id}", response_description="branch data deleted from the database")
+@branchRouter.delete("/{id}/", response_description="branch data deleted from the database")
 async def delete_branch_data(id: str):
     deleted_branch = await delete_branch(id)
     if deleted_branch:
@@ -77,7 +77,7 @@ async def delete_branch_data(id: str):
     )
 
 
-@branchRouter.post("/{id}/logo", response_description="logo uploaded")
+@branchRouter.post("/{id}/logo/", response_description="logo uploaded")
 async def upload_file_to_minio(id: str, file: UploadFile = File(...)):
     try:
         branch = await retrieve_branch(id)
