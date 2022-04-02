@@ -10,7 +10,7 @@ services:
         environment:
             - DB_URL=mongodb://db/myTestDB
         volumes:
-            - ./be_app:/app
+            - ./app:/app
     db:
         image: mongo
         ports:

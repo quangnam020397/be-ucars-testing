@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+    be:
+        container_name: ucar_testing_be
+        image: "xaythixin/images:ucars-testing.staging.be.latest"
+        # ports:
+            # - 8080:8080
+        environment:
+            - DB_URL=mongodb://db/myTestDB
+        networks:
+            - nginx-network
+
+    db:
+        container_name: ucar_testing_db
+        image: mongo
+        networks:
+            - nginx-network
+        # ports:
+            # - 27017:27017
+        volumes:
+            # - /home/kevin/docker_data/ucars-testing/data:/data/db
+            - ./mongodb:/data/db
+
+    fe:
+        container_name: ucar_testing_fe
+        image: "xaythixin/images:ucars-testing.staging.fe.latest"
+        networks:
+            - nginx-network
+        # ports:
+            # - 4200:4200
+
+networks:
+  nginx-network:
+    # external: true
