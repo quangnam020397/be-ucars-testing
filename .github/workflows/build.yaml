@@ -1,0 +1,12 @@
+name: dlu-schedule-bot
+on:
+  push:
+    branches: [ master ]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout repo to master
+      - name: Checkout
+        uses: actions/checkout@v2
+      
