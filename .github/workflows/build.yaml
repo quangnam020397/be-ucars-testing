@@ -26,8 +26,8 @@ jobs:
       - name: build and push docker images
         uses: docker/build-push-action@v2
         with:
-          context: ./app/
-          file: ./docker/Dockerfile
+          context: ./app
+          file: ./app/docker/Dockerfile
           builder: ${{ steps.buildx.output.name }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:ucars-testing.staging.be.latest
