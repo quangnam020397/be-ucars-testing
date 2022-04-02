@@ -31,3 +31,7 @@ jobs:
           builder: ${{ steps.buildx.output.name }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:ucars-testing.staging.be.latest
+
+      # verify docker images
+      - name: Verify
+        run: echo ${{ steps.docker_build.outputs.digest }}
