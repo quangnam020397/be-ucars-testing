@@ -9,6 +9,12 @@ services:
             - 8080:8080
         environment:
             - DB_URL=mongodb://db/myTestDB
+
+            - MINIO_URL=minio.kevin-nguyen.tk
+            - MINIO_ACCESS_KEY=admin
+            - MINIO_SECRET_KEY=K6r3NPLK.ER'+Ezo
+            - MINIO_BUCKET=ucar-testing
+
         volumes:
             - ./app:/app
     db:

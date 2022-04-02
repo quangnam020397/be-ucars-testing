@@ -1,6 +1,8 @@
 from datetime import datetime
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, File, UploadFile
 from fastapi.encoders import jsonable_encoder
+
+from ..services.upload import uploadFile
 
 from ..services.branch import (
     add_branch,
@@ -19,14 +21,15 @@ from ..models.BaseModel import (
 )
 
 
-
 branchRouter = APIRouter()
+
 
 @branchRouter.post("/", response_description="Branch data added into the database")
 async def add_branch_data(branch: BranchSchema = Body(...)):
     branch = jsonable_encoder(branch)
     new_branch = await add_branch(branch)
     return ResponseModel(new_branch, "branch added successfully.")
+
 
 @branchRouter.get("/", response_description="branchs retrieved")
 async def get_branchs():
@@ -43,6 +46,7 @@ async def get_branch_data(id):
         return ResponseModel(branch, "branch data retrieved successfully")
     return ErrorResponseModel("An error occurred.", 404, "branch doesn't exist.")
 
+
 @branchRouter.put("/{id}")
 async def update_branch_data(id: str, req: UpdateBranchSchema = Body(...)):
     req.updated_at = datetime.now()
@@ -58,14 +62,28 @@ async def update_branch_data(id: str, req: UpdateBranchSchema = Body(...)):
         404,
         "There was an error updating the branch data.",
     )
-    
+
+
 @branchRouter.delete("/{id}", response_description="branch data deleted from the database")
 async def delete_branch_data(id: str):
     deleted_branch = await delete_branch(id)
     if deleted_branch:
         return ResponseModel(
-            "branch with ID: {} removed".format(id), "branch deleted successfully"
+            "branch with ID: {} removed".format(
+                id), "branch deleted successfully"
         )
     return ErrorResponseModel(
         "An error occurred", 404, "branch with id {0} doesn't exist".format(id)
     )
+
+
+@branchRouter.post("/logo/{id}", response_description="logo uploaded")
+async def upload_file_to_minio(file: UploadFile = File(...)):
+    try:
+
+        data_file = await uploadFile(file)
+        if(data_file != None):
+            return ResponseModel(data_file, "file uploaded successfully")
+        return ErrorResponseModel("An error occurred", 404, "file not found")
+    except Exception as e:
+        return ErrorResponseModel("An error occurred", 404, str(e))
