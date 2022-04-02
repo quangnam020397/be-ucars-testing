@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+    api:
+        build:
+            context: ./app
+            dockerfile: ./docker/Dockerfile
+        ports:
+            - 8080:8080
+        environment:
+            - DB_URL=mongodb://db/myTestDB
+        volumes:
+            - ./be_app:/app
+    db:
+        image: mongo
+        ports:
+            - 27017:27017
+        volumes:
+            - ./mongodb:/data/db
+    # fe:
+    #     build: 
+    #         context: ./fe_app
+    #         dockerfile: ./docker/Dockerfile
+    #     ports:
+    #         - 4200:4200
+    #     volumes:
+    #         - ./fe_app:/app
