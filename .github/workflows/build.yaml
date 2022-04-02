@@ -28,7 +28,7 @@ jobs:
         id: docker_build
         with:
           context: ./app
-          file: ./app/docker/Dockerfile
+          file: ./app/docker/Dockerfile.staging
           builder: ${{ steps.buildx.output.name }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:ucars-testing.staging.be.latest
@@ -36,3 +36,15 @@ jobs:
       # verify docker images
       - name: Verify
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      # redeploy to vps use ssh action
+      - name: Executing remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PORT: ${{ secrets.PORT }}
+          KEY: ${{ secrets.SSHKEY }}
+          script: |
+            cd /home/kevin/docker/ucars-testing
+            sh redeploy.be.sh
